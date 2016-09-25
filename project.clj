@@ -6,32 +6,45 @@
 
   ;; CLJ AND CLJS source code paths
   :source-paths ["src/clj" "src/cljs"]
-  :dependencies [[org.clojure/clojure "1.7.0"]
+  :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.7.170"]
                  [compojure "1.4.0"] ;;vendor for ring's handler
+                 [org.clojure/java.jdbc "0.6.1"]
+                 [mysql/mysql-connector-java "5.1.6"]
+                 [org.postgresql/postgresql "9.4-1201-jdbc41"]
+                 [hiccup "1.0.5"]
                  ]
 
 
   :plugins [
             [lein-cljsbuild "1.1.1"],;; lein-cljsbuild plugin to build a CLJS project
             [lein-ring "0.9.7"]  ;; ring web-server
+            [lein-figwheel "0.5.0-2"]
             ]
 
   ;; cljsbuild options configuration
   :cljsbuild {:builds
-              [{;; CLJS source code path
-                :source-paths ["src/cljs"]
-
+              [{
                 ;; Google Closure (CLS) options configuration
-                :compiler {;; CLS generated JS script filename
-                           :output-to "resources/public/js/modern.js"
+                ;:compiler {;; CLS generated JS script filename
+                ;           :output-to "resources/public/js/modern.js"
+                ;
+                ;           ;; minimal JS optimization directive
+                ;           :optimizations :whitespace
+                ;
+                ;           ;; generated JS code prettyfication
+                ;           :pretty-print true
+                ;           }
 
-                           ;; minimal JS optimization directive
-                           :optimizations :whitespace
-
-                           ;; generated JS code prettyfication
-                           :pretty-print true
+                :source-paths ["src/cljs"] ;; CLJS source code path
+                :figwheel true
+                :compiler {  ;; Google Closure (CLS) options configuration
+                           :output-to "resources/public/js/modern.js" ;; CLS generated JS script filename
+                           :output-dir "resources/public/js/dev"
+                           :optimizations :none ;; minimal JS optimization directive
+                           :pretty-print true ;; generated JS code prettyfication
                            }
+
                 }]
               }
 
