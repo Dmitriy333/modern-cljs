@@ -13,6 +13,7 @@
                  [mysql/mysql-connector-java "5.1.6"]
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [hiccup "1.0.5"]
+                 [javax.servlet/servlet-api "2.5"]          ;;repl doesn't work without dependencies
                  ]
 
 

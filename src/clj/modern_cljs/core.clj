@@ -2,46 +2,28 @@
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
             [compojure.route :as route]
-            [clojure.java.jdbc :as sql]))
+            [modern-cljs.views :as views]))
 
 ;; defroutes macro defines a function that chains individual route
 ;; functions together. The request map is passed to each function in
 ;; turn, until a non-nil response is returned.
 (defroutes app-routes
            ; to serve document root address
-           (GET "/" [] "<p>Hello from compojure. Hello world</p>")
-           ; to serve static pages saved in resources/public directory
-           (route/resources "/")
-           ; if page is not found
-           (route/not-found "Page not found"))
+           (GET "/" [] (views/news-list))
+           (GET "/news" [] (views/news-list))
+           (GET "/news/:id" [id] (views/browse-news id))
+
+           (route/resources "/") ; to serve static pages saved in resources/public directory
+
+           (route/not-found "Page not found")) ; if page is not found
+
+(defn wrap-log-request [handler]
+  (fn [req] ; return handler function
+    (println req) ; perform logging
+    (handler req))) ; pass the request through to the inner handler
 
 ;; site function creates a handler suitable for a standard website,
 ;; adding a bunch of standard ring middleware to app-route:
 (def handler
-  (handler/site app-routes))
+  (handler/site (-> app-routes wrap-log-request)))
 
-(def mysql-db {
-         :classname "com.mysql.jdbc.Driver"
-         :subprotocol "mysql"
-         :subname "//127.0.0.1:3306/newsmanagement"
-         :user "root"
-         :password "root"
-         })
-
-(sql/query mysql-db
-         ["select * from news where news_id = ?" "1"]
-         {:row-fn :short_text})
-
-;(defn list-users []
-;  (sql/with-connection db
-;   (sql/with-query-results rows
-;     ["select * from news"]
-;     (println rows))))
-
-
-
-
-;(defn foo
-;  "I don't do a whole lot."
-;  [x]
-;  (println x "Hello, World!"))
