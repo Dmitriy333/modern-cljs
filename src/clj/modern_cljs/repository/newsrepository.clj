@@ -18,3 +18,6 @@
 (defn get-news-by-id [id]
   (sql/query dbconfig/mysql-db
              ["select * from news where news_id = ?" id]))
+
+(defn save-news [news]
+  news)

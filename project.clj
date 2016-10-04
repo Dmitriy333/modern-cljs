@@ -14,6 +14,7 @@
                  [org.postgresql/postgresql "9.4-1201-jdbc41"]
                  [hiccup "1.0.5"]
                  [javax.servlet/servlet-api "2.5"]          ;;repl doesn't work without dependencies
+                 [ring/ring-json "0.4.0"]                   ;;to parse json https://github.com/ring-clojure/ring-json
                  ]
 
 

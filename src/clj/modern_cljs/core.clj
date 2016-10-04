@@ -1,8 +1,12 @@
 (ns modern-cljs.core
   (:require [compojure.core :refer :all]
             [compojure.handler :as handler]
+            [ring.middleware.json :refer [wrap-json-response]]
+            [ring.util.response :refer [response]]
             [compojure.route :as route]
-            [modern-cljs.views :as views]))
+            [ring.middleware.json :as middleware]
+            [modern-cljs.views :as views]
+            [modern-cljs.repository.newsrepository :as newsrepo]))
 
 ;; defroutes macro defines a function that chains individual route
 ;; functions together. The request map is passed to each function in
@@ -12,9 +16,9 @@
            (GET "/" [] (views/news-list))
            (GET "/news" [] (views/news-list))
            (GET "/news/:id" [id] (views/browse-news id))
+           (POST "/news" {body :body} (newsrepo/save-news body))
 
            (route/resources "/") ; to serve static pages saved in resources/public directory
-
            (route/not-found "Page not found")) ; if page is not found
 
 (defn wrap-log-request [handler]
@@ -24,6 +28,19 @@
 
 ;; site function creates a handler suitable for a standard website,
 ;; adding a bunch of standard ring middleware to app-route:
+(def app-handler
+  (handler/site
+    (-> app-routes
+        wrap-log-request )))
+
+(def api-handler
+  (->
+      (handler/api app-routes)
+      (middleware/wrap-json-body)
+      (middleware/wrap-json-response)))
+
 (def handler
-  (handler/site (-> app-routes wrap-log-request)))
+  (routes                                                   ;;got it here http://stackoverflow.com/questions/30303256/registering-multiple-handlers-while-running-server
+    app-handler
+    api-handler))
 
