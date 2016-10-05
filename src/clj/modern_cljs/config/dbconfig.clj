@@ -1,4 +1,4 @@
-(ns modern-cljs.repository.dbconfig
+(ns modern-cljs.config.dbconfig
   (:require [compojure.core :refer :all]))
 
 (def mysql-db {
