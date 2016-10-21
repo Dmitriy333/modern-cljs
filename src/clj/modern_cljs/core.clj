@@ -16,6 +16,7 @@
            (GET "/" [] (views/news-list))
            (GET "/news" [] (views/news-list))
            (GET "/news/:id" [id] (views/browse-news id))
+           (GET "/add-news" [] (views/add-news-page))
            (POST "/news" {body :body} (newsrepo/save-news body))
 
            (route/resources "/") ; to serve static pages saved in resources/public directory

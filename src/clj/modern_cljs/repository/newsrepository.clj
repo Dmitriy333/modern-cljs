@@ -1,9 +1,10 @@
 (ns modern-cljs.repository.newsrepository
   (:require [compojure.core :refer :all]
             [clojure.java.jdbc :as sql]
-            [modern-cljs.config.dbconfig :as dbconfig]))
+            [modern-cljs.config.dbconfig :as dbconfig]
+            [modern-cljs.model.model :as model]))
 
-(defrecord News [id, title, short-text, full-text, creation-date])
+;(defrecord News [id, title, short-text, full-text, creation-date])
 
 (defprotocol CrudRepository
   (find-all [this])
@@ -14,14 +15,14 @@
   (find-by-id [this id]
     (let [news-items (sql/query dbconfig ["select * from news where news_id = ?" id])]
       (for [news news-items]
-        (->News (news :news_id) (news :title) (news :short_text) (news :full_text) (news :creation_date)))))
+        (model/->News (news :news_id) (news :title) (news :short_text) (news :full_text) (news :creation_date)))))
   (find-all [this]
     (let [news-list (sql/query dbconfig ["SELECT * FROM news"])]
       (for [news news-list]
-        (->News (news :news_id) (news :title) (news :short_text) (news :full_text) (news :creation_date))))))
+        (model/->News (news :news_id) (news :title) (news :short_text) (news :full_text) (news :creation_date))))))
 
 ;instance of news repo
-(def news-repo-component (NewsRepositoryComponent. dbconfig/mysql-db))
+(def news-repo-component (->NewsRepositoryComponent dbconfig/mysql-db))
 
 (defn news-repo-find-all-example []
   (let [news-list (find-all news-repo-component)]
@@ -30,7 +31,7 @@
 
 (defn news-repo-find-by-id-example [id]
   (let [news (find-by-id news-repo-component id)]
-    (println news)))
+    (println (:id news) )))
 
 (defn load-all-news []
   (sql/query dbconfig/mysql-db ["SELECT * FROM news"]

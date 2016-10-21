@@ -1,5 +1,4 @@
-(ns modern-cljs.news
-  (:require modern-cljs.core))
+(ns modern-cljs.news)
 
 ;; define the function to be attached to form submission event
 (defn display-news-list []
