@@ -3,7 +3,8 @@
         [hiccup.form]
         [hiccup.element :only (link-to)]
         :require [modern-cljs.repository.newsrepository :as newsrepo]
-        [modern-cljs.model.model :as model]))
+        [modern-cljs.model.model :as model])
+  (:import (java.text SimpleDateFormat)))
 
 (defn nav-bar []
   (html5 [:nav {:class "navbar navbar-default navbar-fixed-top"}
@@ -37,21 +38,42 @@
      ]))
 
 (defn browse-news [id]
-  (let [news (newsrepo/get-news-by-id id)]
+  (let [news (find-by-id news-repo-component id)]
     (html5
       [:head
-       [:title "Read News"]
+       [:title (str "Read News" (:title news))  ]
        (include-css "/css/base.css")
        (include-css "/css/bootstrap.min.css")
-       (include-js "/js/dev/goog/base.js")
-       (include-js "/js/modern.js")
        ]
       [:body
        (nav-bar)
-       [:div {:class "container news-container"}]
-       (class news)
-       news
+       [:div {:class "container news-container"}
+        [:div (:title news)]
+        [:div (.format (SimpleDateFormat. "yyyy-MM-dd") (:creation-date news))]
+        [:div (:full-text news)]
+        ]
+
        ])))
+
+(defn comments-component [newsId]
+  )
+
+;(defn browse-news [id]
+;  (let [news (newsrepo/get-news-by-id id)]
+;    (html5
+;      [:head
+;       [:title "Read News"]
+;       (include-css "/css/base.css")
+;       (include-css "/css/bootstrap.min.css")
+;       (include-js "/js/dev/goog/base.js")
+;       (include-js "/js/modern.js")
+;       ]
+;      [:body
+;       (nav-bar)
+;       [:div {:class "container news-container"}]
+;       (class news)
+;       news
+;       ])))
 
 (defn quick-form [& [name message error]]
   (html

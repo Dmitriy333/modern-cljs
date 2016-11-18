@@ -23,10 +23,11 @@
            (route/resources "/") ; to serve static pages saved in resources/public directory
            (route/not-found "Page not found")) ; if page is not found
 
-
 (defroutes api-routes
-           (context "/api" []
-                    (POST "/add-news" {body :body} [body] {:status 200 :body (model/->News (.valAt body "purge_everything") "asdf" "asdf" "asdf" "asdf")})))
+ (context "/api" []
+  (POST "/add-news" {body :body} [body] {:status 201        ;;(.add newsrepo/news-repo-component body)
+                                         ;;:body (model/->News (.valAt body "purge_everything") "asdf" "asdf" "asdf" "asdf")
+                                         })))
 
 (defn wrap-log-request [handler]
   (fn [req] ; return handler function
@@ -48,5 +49,5 @@
 (def handler
   (routes                                                   ;;got it here http://stackoverflow.com/questions/30303256/registering-multiple-handlers-while-running-server
     api-handler
-    app-routes))
+    app-handler))
 
