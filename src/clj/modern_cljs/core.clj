@@ -7,15 +7,14 @@
             [compojure.route :as route]
             [ring.middleware.json :as middleware]
             [modern-cljs.views :as views]
-            [modern-cljs.repository.newsrepository :as newsrepo]
-            [modern-cljs.model.model :as model]))
+            [modern-cljs.views.layout :as layout]))
 
 ;; defroutes macro defines a function that chains individual route
 ;; functions together. The request map is passed to each function in
 ;; turn, until a non-nil response is returned.
 (defroutes app-routes
            ; to serve document root address
-           (GET "/" [] (views/news-list))
+           (GET "/" [] (layout/application "Home" (views/news-list)))
            (GET "/news" [] (views/news-list))
            (GET "/news/:id" [id] (views/browse-news id))
            (GET "/add-news" [] (views/add-news-page))

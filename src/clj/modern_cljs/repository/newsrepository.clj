@@ -25,21 +25,6 @@
     (jdbc/insert! dbconfig :news model))
   (delete [this id] (jdbc/delete! dbconfig :news ["id = ?" id])))
 
-;(defrecord NewsRepositoryComponent [dbconfig]
-;  CrudRepository
-;  (find-by-id [this id]
-;    (let [news-items (jdbc/query dbconfig ["select * from news where news_id = ?" id])]
-;      (println (class news-items))
-;      (for [news news-items]
-;        (model/->News (news :news_id) (news :title) (news :short_text) (news :full_text) (news :creation_date)))))
-;  (find-all [this]
-;    (let [news-list (jdbc/query dbconfig ["SELECT * FROM news"])]
-;      (for [news news-list]
-;        (model/->News (news :news_id) (news :title) (news :short_text) (news :full_text) (news :creation_date)))))
-;  (add [this model]
-;    (jdbc/insert! dbconfig :news model))
-;  (delete [this id] (jdbc/delete! dbconfig :news ["id = ?" id])))
-
 ;instance of news repo
 (def news-repo-component (->NewsRepositoryComponent dbconfig/mysql-db))
 

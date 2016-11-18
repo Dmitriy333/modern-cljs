@@ -52,28 +52,13 @@
         [:div (.format (SimpleDateFormat. "yyyy-MM-dd") (:creation-date news))]
         [:div (:full-text news)]
         ]
-
        ])))
 
-(defn comments-component [newsId]
+(defn comments-component [comments]
+  (html
+    [:div {:ng-repeat "comment in comments"}]
+    )
   )
-
-;(defn browse-news [id]
-;  (let [news (newsrepo/get-news-by-id id)]
-;    (html5
-;      [:head
-;       [:title "Read News"]
-;       (include-css "/css/base.css")
-;       (include-css "/css/bootstrap.min.css")
-;       (include-js "/js/dev/goog/base.js")
-;       (include-js "/js/modern.js")
-;       ]
-;      [:body
-;       (nav-bar)
-;       [:div {:class "container news-container"}]
-;       (class news)
-;       news
-;       ])))
 
 (defn quick-form [& [name message error]]
   (html

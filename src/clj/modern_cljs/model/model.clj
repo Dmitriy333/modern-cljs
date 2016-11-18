@@ -3,3 +3,5 @@
 (defrecord News [id, title, short-text, full-text, creation-date])
 
 (defrecord User [id, email, login, password])
+
+(defrecord Comment [id, text, creationDate, newsId, userId])
