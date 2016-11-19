@@ -10,7 +10,7 @@
             [modern-cljs.views :as views]
             [modern-cljs.views.layout :as layout]
             [cheshire.core :as json]
-            [modern-cljs.model.model :as model]))
+            [modern-cljs.service.browse-news-service :as browse-news-service]))
 
 ;; defroutes macro defines a function that chains individual route
 ;; functions together. The request map is passed to each function in
@@ -40,7 +40,11 @@
 
 (defroutes api-routes
            (context "/api" []
-             (POST "/add-news" {body :body} [body] {:status 200 :body (model/->News (.valAt body "purge_everything") "asdf" "asdf" "asdf" "asdf")})))
+             ;(POST "/add-news" {body :body} [body] {:status 200 :body (model/->News (.valAt body "newsId") (str (class body))  "asdf" "asdf" "asdf")})
+             ;(POST "/add-news" {body :body} [body] {:status 200 :body (views/news-list) })
+             (POST "/add-news" req {:status 200 :body (views/browse-news (:newsId (:params req))) })
+             (POST "/add-comment" [] browse-news-service/add-comment)
+             ))
 
 
 (defn wrap-log-request [handler]
@@ -60,8 +64,8 @@
 
 (def cors-headers
   { "Access-Control-Allow-Origin" "*"
-   "Access-Control-Allow-Headers" "Content-Type"
-   "Access-Control-Allow-Methods" "GET,POST,OPTIONS" })
+   "Access-Control-Allow-Headers" "X-Requested-With,Content-Type,Cache-Control"
+   "Access-Control-Allow-Methods" "GET,PUT,POST,DELETE,OPTIONS" })
 
 (defn all-cors
   "Allow requests from all origins"
@@ -75,7 +79,6 @@
 ;; adding a bunch of standard ring middleware to app-route:
 (def app-handler
   (-> app-routes
-      ;allow-cross-origin
       all-cors
       ;wrap-log-request
       ))
@@ -112,52 +115,24 @@
         (let [json-response (update-in response [:body] json/generate-string options)]
           (if (contains? (:headers response) "Content-Type")
             json-response
-            (my-content-type json-response "text/html; charset=utf-8")))
+            (my-content-type json-response "text/html; charset=utf-8")
+            ))
         response))))
 
 
 (def api-handler
   (->
       (handler/api api-routes)
-      ;(wrap-cors :access-control-allow-origin #".*"
-      ;           :access-control-allow-methods [:get :put :post]
-      ;           :access-control-allow-headers ["Content-Type"])
-      ;(allow-cross-origin)
-      ;(all-cors)
-      (middleware/wrap-json-body)
+      ;(middleware/wrap-json-body)
       (middleware/wrap-json-response)
-      ;(my-wrap-json-response)
-      ;(wrap-cors routes #".*")
+      (my-wrap-json-response)
       )
   ;
   )
 
-
-;(def allow-cross-origin-handler (-> app wrap-params allow-cross-origin))
-
-
-
-;(def cors-handler
-;  ;(wrap-cors routes #".*")
-;  ;(wrap-cors api-routes #".*")
-;  ;;(wrap-cors routes identity)
-;  ;(wrap-cors api-routes :access-control-allow-origin [#"http://localhost:3000"]
-;  ;           :access-control-allow-methods [:get :put :post :delete])
-;  (wrap-cors api-routes :access-control-allow-origin [#".*"]
-;             :access-control-allow-methods [:get :put :post :delete]
-;             :access-control-allow-headers [:content-type]
-;             :access-control-max-age [86400]
-;
-;             )
-  ;(wrap-cors routes :access-control-allow-origin [#".*"]
-  ;           :access-control-allow-methods [:get :put :post :delete])
-
-;
-;)
-
 (def handler
   (routes                                                   ;;got it here http://stackoverflow.com/questions/30303256/registering-multiple-handlers-while-running-server
-     api-handler
+    api-handler
     app-handler
 ))
 
