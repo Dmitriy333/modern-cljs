@@ -15,6 +15,8 @@
 (defrecord NewsRepositoryComponent [dbconfig]
   CrudRepository
   (find-by-id [this id]
+    (println id)
+    (println (class id))
     (let [news-item (first (jdbc/query dbconfig ["select * from news where news_id = ?" id]))]
         (model/->News (news-item :news_id) (news-item :title) (news-item :short_text) (news-item :full_text) (news-item :creation_date))))
   (find-all [this]

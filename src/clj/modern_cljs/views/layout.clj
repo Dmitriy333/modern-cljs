@@ -28,10 +28,14 @@
           [:title title]
           (include-css "/css/bootstrap.min.css")
           (include-js "http://code.angularjs.org/1.2.3/angular.min.js")
-          (include-js "/js/angular-1.2.3-min.js")
+          (include-js "/providers/angular-1.2.3-min.js")
+          (include-js "/providers/jquery-3.1.1.min.js")
+          (include-js "/code/mainjscode.js")
+          (include-js "/code/angularmaincontroller.js")
 
           [:body
            (nav-bar)
+
            [:div {:class "container"} content]
            ]
           ]))
