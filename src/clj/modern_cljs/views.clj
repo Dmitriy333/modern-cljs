@@ -6,7 +6,8 @@
         [modern-cljs.repository.newsrepository :as newsrepo]
         [ring.util.response :as response]
         [modern-cljs.service.browse-news-service]
-        [modern-cljs.model.model :as model])
+        [modern-cljs.model.model :as model]
+        [modern-cljs.repository.crudrepository :as crudRepository])
   (:import (java.text SimpleDateFormat)))
 
 (defn nav-bar []
@@ -29,7 +30,7 @@
      [:input {:type "hidden" :name "newsId" :value "1"}]
      [:input {:type "hidden" :name "userId" :value "1"}]
      [:input {:type "text" :name "text" :required "true"}]
-     [:input {:type "submit" :value "Submit"} ]
+     [:input {:type "submit" :value "Submit"}]
      ]
     )
   )
@@ -49,7 +50,7 @@
     [:body
      (nav-bar)
      [:div {:class "container news-container"}
-      (let [news-list (find-all news-repo-component)]
+      (let [news-list (find-all newsRepositoryComponent)]
         (for [news news-list]
           [:div {:class "news-item"}
            [:div {class "news-title"} (link-to (str "/news/" (:id news)) (:title news))]
@@ -60,14 +61,14 @@
 
 
 (defn browse-news [id]
-    (if (not (= id (:news_id (:news (getBrowseNewsPageState)))))
-      (init-page-state id) (println "state was rerendered"))                                 ; not reload page state if it is not changed
+  (if (not (= id (:news_id (:news (getBrowseNewsPageState)))))
+    (init-page-state id) (println "state was rerendered"))  ; not reload page state if it is not changed
 
   (let [news (:news (getBrowseNewsPageState))]
     (html5
       [:head
        [:meta {:charset "utf-8"}]
-       [:title (str "Read News" (:title news))  ]
+       [:title (str "Read News" (:title news))]
        (include-css "/css/base.css")
        (include-css "/css/bootstrap.min.css")
        ]
@@ -84,9 +85,9 @@
 (defn quick-form [& [name message error]]
   (html
     (form-to {:enctype "application/json"}
-      [:post "/news"]
-      (text-field "Hello")
-      (submit-button {:class "btn" :name "submit"} "Save"))))
+             [:post "/news"]
+             (text-field "Hello")
+             (submit-button {:class "btn" :name "submit"} "Save"))))
 
 (defn add-news-page []
   (html5

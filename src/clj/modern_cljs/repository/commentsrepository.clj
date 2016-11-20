@@ -2,14 +2,14 @@
   (:require [modern-cljs.model.model :as model]
             [clojure.java.jdbc :as jdbc]
             [modern-cljs.config.dbconfig :as dbconfig]
-            [modern-cljs.repository.newsrepository :as repository])
+            [modern-cljs.repository.crudrepository :as crudRepository])
 )
 
 (defprotocol CommentsRepository
   (find-by-news-id [this newsId]))
 
 (defrecord CommentsRepositoryImpl [dbconfig]
-  repository/CrudRepository CommentsRepository
+  crudRepository/CrudRepository CommentsRepository
 
   (find-by-id [this id]
     (let [item (first (jdbc/query dbconfig ["SELECT * FROM COMMENTS WHERE id = ?" id]))]
