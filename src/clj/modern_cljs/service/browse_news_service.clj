@@ -17,7 +17,11 @@
 (defn add-comment [request]
   (let [commentItem (:params request)]
     (let [comment (model/->Comment nil (:text commentItem) (new Date) (:newsId commentItem) (:userId commentItem))]
-      (add CommentRepositoryComponent comment))
+      (let [insertedId (:generated_key (first (add CommentRepositoryComponent comment)))]
+        (let [insertedComment (model/->Comment insertedId (:text commentItem) (new Date) (:newsId commentItem) (:userId commentItem))]
+          (let [commentsList (:comments @browseNewsPageState)]
+            (conj commentsList insertedComment)
+            (swap! browseNewsPageState assoc :comments commentsList)))))
     (response/redirect (str "/news/" (:newsId commentItem)))))
 
 (defn getBrowseNewsPageState [] @browseNewsPageState)

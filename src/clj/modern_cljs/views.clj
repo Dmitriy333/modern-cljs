@@ -31,14 +31,6 @@
      [:input {:type "text" :name "text" :required "true"}]
      [:input {:type "submit" :value "Submit"} ]
      ]
-
-    ;(f/form-to {:enctype "application/json"} [:post "/api/add-news"]
-    ;           (f/hidden-field :user-id 42)
-    ;           (f/hidden-field :newsId 1)
-    ;           (f/text-field :title)
-    ;           (f/text-field :content)
-    ;           (submit-button {:class "btn" :name "submit"} "Save")
-    ;           )
     )
   )
 
@@ -57,7 +49,6 @@
     [:body
      (nav-bar)
      [:div {:class "container news-container"}
-      ;(comments-component)
       (let [news-list (find-all news-repo-component)]
         (for [news news-list]
           [:div {:class "news-item"}
@@ -69,7 +60,9 @@
 
 
 (defn browse-news [id]
-  (init-page-state id)
+    (if (not (= id (:news_id (:news (getBrowseNewsPageState)))))
+      (init-page-state id) (println "state was rerendered"))                                 ; not reload page state if it is not changed
+
   (let [news (:news (getBrowseNewsPageState))]
     (html5
       [:head
@@ -87,12 +80,6 @@
         (comments-component (:comments (getBrowseNewsPageState)))
         ]
        ])))
-
-;(defn add-comment [request]
-;
-;  (println (:params request))
-;  (response/redirect "/")
-;)
 
 (defn quick-form [& [name message error]]
   (html

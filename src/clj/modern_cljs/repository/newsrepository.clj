@@ -4,7 +4,6 @@
             [modern-cljs.config.dbconfig :as dbconfig]
             [modern-cljs.model.model :as model]))
 
-;(defrecord News [id, title, short-text, full-text, creation-date])
 
 (defprotocol CrudRepository
   (find-all [this])
@@ -15,10 +14,8 @@
 (defrecord NewsRepositoryComponent [dbconfig]
   CrudRepository
   (find-by-id [this id]
-    (println id)
-    (println (class id))
     (let [news-item (first (jdbc/query dbconfig ["select * from news where news_id = ?" id]))]
-        (model/->News (news-item :news_id) (news-item :title) (news-item :short_text) (news-item :full_text) (news-item :creation_date))))
+      (model/->News (news-item :news_id) (news-item :title) (news-item :short_text) (news-item :full_text) (news-item :creation_date))))
   (find-all [this]
     (let [news-list (jdbc/query dbconfig ["SELECT * FROM news"])]
       (for [news news-list]
@@ -29,28 +26,3 @@
 
 ;instance of news repo
 (def news-repo-component (->NewsRepositoryComponent dbconfig/mysql-db))
-
-(defn news-repo-find-all-example []
-  (let [news-list (find-all news-repo-component)]
-    (for [news news-list]
-      (println news))))
-
-(defn news-repo-find-by-id-example [id]
-  (let [news (find-by-id news-repo-component id)]
-    (println (:id news) )))
-
-(defn load-all-news []
-  (jdbc/query dbconfig/mysql-db ["SELECT * FROM news"]
-              {:row-fn #(str (:short_text %) " was released in " (:creation_date %))}))
-
-(defn load-news-by-id [id]
-  (jdbc/query dbconfig/mysql-db
-              ["select * from news where news_id = ?" id]
-              {:row-fn :short_text}))
-
-(defn get-news-by-id [id]
-  (jdbc/query dbconfig/mysql-db
-              ["select * from news where news_id = ?" id]))
-
-(defn save-news [news]
-  news)

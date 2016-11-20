@@ -21,7 +21,7 @@
         (model/->Comment (item :id) (item :text) (item :creation_date) (item :news_id) (item :user_id)))))
 
   (add [this model]
-    (jdbc/insert! dbconfig :comments model))
+    (let [resultSet (jdbc/insert! dbconfig :comments model)] resultSet))
 
   (delete [this id] (jdbc/delete! dbconfig :comments ["id = ?" id]))
 
