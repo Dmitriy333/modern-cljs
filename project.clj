@@ -17,6 +17,8 @@
                  [ring/ring-json "0.4.0"]                   ;;to parse json https://github.com/ring-clojure/ring-json
                  [jumblerg/ring.middleware.cors "1.0.1"]
                  [org.clojure/data.json "0.2.6"]            ;for json
+                 [ring-basic-authentication "1.0.5"]
+                 [digest "1.4.5"]                           ;; md5 cipher
                  ]
 
 

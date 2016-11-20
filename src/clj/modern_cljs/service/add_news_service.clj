@@ -8,7 +8,6 @@
             [modern-cljs.repository.crudrepository :as crudRepository])
   (:import (java.util Date)))
 
-
 (defn add-news [request]
   (let [newsItem (:params request)]
     (crudRepository/add newsRepositoryComponent (model/->News nil (:title newsItem) (:shortText newsItem) (:fullText newsItem) (new Date))))

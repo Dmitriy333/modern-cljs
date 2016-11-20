@@ -28,8 +28,7 @@
      [:input {:type "submit" :value "Add comment" :class "btn btn-primary"}]
      ]))
 
-
-(defn news-list []
+(defn news-list-view []
   (html5
     [:div {:class "container news-container"}
      (let [news-list (find-all newsRepositoryComponent)]
@@ -41,7 +40,7 @@
           [:hr]]))
     ]))
 
-(defn browse-news [id]
+(defn browse-news-view [id]
   (init-page-state id)
   (let [news (:news (getBrowseNewsPageState))]
      [:div {:class "container news-container"}
@@ -51,7 +50,7 @@
       (comments-component (:comments (getBrowseNewsPageState)))
       ]))
 
-(defn add-news-page []
+(defn add-news-view []
    (html5
      [:form {:enctype "application/json" :method "post" :action "/api/add-news" :class "container news-container"}
       [:span "Title:"] [:input {:type "text" :name "title" :class "news-title" :required "true"}]
@@ -62,4 +61,17 @@
       [:br]
       [:input {:type "submit" :value "Add news" :class "btn btn-primary"}]
       ]))
+
+(defn registration-view []
+  (html5
+    [:form {:enctype "application/json" :method "post" :action "/api/register" :class "container news-container" :onsubmit "return submitRegistrationForm()"}
+     [:span "Email"] [:input {:type "email" :id "email" :name "email" :required "true"}]
+     [:br]
+     [:span "Name"] [:input {:type "text" :id "name" :name "login" :required "true"}]
+     [:br]
+     [:span "Password"] [:input {:type "password" :id "password" :name "password" :required "true"}]
+     [:br]
+     [:span "Confirm Password"] [:input {:type "password" :id "confirm-password" :name "confirmedPassword" :required "true"}]
+     [:br]
+     [:input {:type "submit" :value "Register" :class "btn btn-success"}]]))
 
