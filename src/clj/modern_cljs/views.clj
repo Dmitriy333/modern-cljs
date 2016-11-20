@@ -23,14 +23,19 @@
 (defn comments-component [comments]
   (html5
     (for [comment comments]
-      [:div {:class "news-item"}
-       [:div {class "news-short-text"} (:text comment)]
+      [:form {:enctype "application/json" :method "post" :action "/api/delete-comment" :class "comment-item"}
+       [:input {:type "hidden" :name "newsId" :value (:news_id comment)}]
+       [:input {:type "hidden" :name "userId" :value (:user_id comment)}]
+       [:input {:type "hidden" :name "commentId" :value (:id comment)}]
+       [:div {class "comment-text"} (:text comment)]
+       [:input {:type "submit" :value "Remove Comment" :class "btn btn-danger"}]
        [:hr]])
+
     [:form {:enctype "application/json" :method "post" :action "/api/add-comment"}
      [:input {:type "hidden" :name "newsId" :value "1"}]
      [:input {:type "hidden" :name "userId" :value "1"}]
      [:input {:type "text" :name "text" :required "true"}]
-     [:input {:type "submit" :value "Submit"}]
+     [:input {:type "submit" :value "Add comment" :class "btn btn-primary"}]
      ]
     )
   )
@@ -54,14 +59,14 @@
         (for [news news-list]
           [:div {:class "news-item"}
            [:div {class "news-title"} (link-to (str "/news/" (:id news)) (:title news))]
-           [:div {class "news-short-text"} (:short-text news)]
-           [:div (link-to {:class "btn btn-primary"} (str "/news/" (:id news)) "Read")]
+           [:div {class "news-short-text"} (:short_text news)]
+           [:div (link-to {:class "btn btn-success"} (str "/news/" (:id news)) "Read")]
            [:hr]]))]
      ]))
 
 
 (defn browse-news [id]
-  (if (not (= id (:news_id (:news (getBrowseNewsPageState)))))
+  (if (not (= id (:id (:news (getBrowseNewsPageState)))))
     (init-page-state id) (println "state was rerendered"))  ; not reload page state if it is not changed
 
   (let [news (:news (getBrowseNewsPageState))]
@@ -76,18 +81,11 @@
        (nav-bar)
        [:div {:class "container news-container"}
         [:div (:title news)]
-        [:div (.format (SimpleDateFormat. "yyyy-MM-dd") (:creation-date news))]
-        [:div (:full-text news)]
+        [:div (.format (SimpleDateFormat. "yyyy-MM-dd") (:creation_date news))]
+        [:div (:full_text news)]
         (comments-component (:comments (getBrowseNewsPageState)))
         ]
        ])))
-
-(defn quick-form [& [name message error]]
-  (html
-    (form-to {:enctype "application/json"}
-             [:post "/news"]
-             (text-field "Hello")
-             (submit-button {:class "btn" :name "submit"} "Save"))))
 
 (defn add-news-page []
   (html5
@@ -100,8 +98,13 @@
      ]
     [:body
      (nav-bar)
-     [:div {:class "container news-container"}]
-     [:input {:type "text-box"}]
-     (quick-form)
-     ]))
+     [ :form {:enctype "application/json" :method "post" :action "/api/add-news" :class "container news-container"}
+      [:span "Title:"] [:input {:type "text" :name "title" :class "news-title" :required "true"}]
+      [:br]
+      [:span "Short text:"] [:textarea {:name "shortText" :class "news-short-text" :required "true"}]
+      [:br]
+      [:span "Text: "] [:textarea {:name "fullText" :class "text" :required "true"}]
+      [:br]
+      [:input {:type "submit" :value "Add news" :class "btn btn-primary"}]
+      ]]))
 

@@ -30,4 +30,4 @@
       (for [item itemList]
         (model/->Comment (item :id) (item :text) (item :creation_date) (item :news_id) (item :user_id))))))
 
-(def CommentRepositoryComponent (->CommentsRepositoryImpl dbconfig/mysql-db))
+(def commentRepositoryComponent (->CommentsRepositoryImpl dbconfig/mysql-db))

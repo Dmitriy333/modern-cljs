@@ -10,7 +10,8 @@
             [modern-cljs.views :as views]
             [modern-cljs.views.layout :as layout]
             [cheshire.core :as json]
-            [modern-cljs.service.browse-news-service :as browse-news-service]))
+            [modern-cljs.service.browse-news-service :as browse-news-service]
+            [modern-cljs.service.add-news-service :as add-news-service]))
 
 ;; defroutes macro defines a function that chains individual route
 ;; functions together. The request map is passed to each function in
@@ -42,9 +43,11 @@
            (context "/api" []
              ;(POST "/add-news" {body :body} [body] {:status 200 :body (model/->News (.valAt body "newsId") (str (class body))  "asdf" "asdf" "asdf")})
              ;(POST "/add-news" {body :body} [body] {:status 200 :body (views/news-list) })
-             (POST "/add-news" req {:status 200 :body (views/browse-news (:newsId (:params req))) })
+             ;(POST "/add-news" req {:status 200 :body (views/browse-news (:newsId (:params req))) })
+
+             (POST "/add-news" [] add-news-service/add-news)
              (POST "/add-comment" [] browse-news-service/add-comment)
-             ))
+             (POST "/delete-comment" [] browse-news-service/remove-comment)))
 
 
 (defn wrap-log-request [handler]

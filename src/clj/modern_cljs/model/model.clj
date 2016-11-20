@@ -1,6 +1,6 @@
 (ns modern-cljs.model.model)
 
-(defrecord News [id, title, short-text, full-text, creation-date])
+(defrecord News [id, title, short_text, full_text, creation_date])
 
 (defrecord User [id, email, login, password])
 
