@@ -5,11 +5,9 @@
             [ring.middleware.json :refer [wrap-json-response]]
             [ring.util.response :refer [response]]
             [compojure.route :as route]
-            [ring.middleware.json :as middleware]
             [ring.middleware.cors :refer [wrap-cors]]
             [modern-cljs.views :as views]
             [modern-cljs.views.layout :as layout]
-            [cheshire.core :as json]
             [modern-cljs.service.browse-news-service :as browse-news-service]
             [modern-cljs.service.add-news-service :as add-news-service]))
 
@@ -20,16 +18,16 @@
            ; to serve document root address
            (GET "/" [] (layout/application "Home" (views/news-list)))
            (GET "/news/:id" [id] (layout/application "Read News" (views/browse-news id)))
-           (GET "/add-news" [] "Add News Page" (layout/application (views/add-news-page)))
+           (GET "/add-news" [] (layout/application "Add News Page" (views/add-news-page)))
 
            (route/resources "/") ; to serve static pages saved in resources/public directory
            (route/not-found "Page not found")) ; if page is not found
 
 (defroutes api-routes
-           (context "/api" []
-             (POST "/add-news" [] add-news-service/add-news)
-             (POST "/add-comment" [] browse-news-service/add-comment)
-             (POST "/delete-comment" [] browse-news-service/remove-comment)))
+   (context "/api" []
+     (POST "/add-news" [] add-news-service/add-news)
+     (POST "/add-comment" [] browse-news-service/add-comment)
+     (POST "/delete-comment" [] browse-news-service/remove-comment)))
 
 
 (defn wrap-log-request [handler]
@@ -45,8 +43,7 @@
       ))
 
 (def api-handler
-  (->
-      (handler/api api-routes)))
+  (-> (handler/api api-routes)))
 
 (def handler
   (routes                                                   ;;got it here http://stackoverflow.com/questions/30303256/registering-multiple-handlers-while-running-server
