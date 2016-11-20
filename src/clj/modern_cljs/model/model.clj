@@ -5,3 +5,5 @@
 (defrecord User [id, email, login, password])
 
 (defrecord Comment [id, text, creation_date, news_id, user_id])
+
+(defrecord Log [id, value, type, creation_date])

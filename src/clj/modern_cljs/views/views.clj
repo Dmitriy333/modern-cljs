@@ -1,4 +1,4 @@
-(ns modern-cljs.views
+(ns modern-cljs.views.views
   (:use [hiccup core page]
         [hiccup.form :as f]
         [hiccup.element :only (link-to)]

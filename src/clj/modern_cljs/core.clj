@@ -6,7 +6,7 @@
             [ring.util.response :refer [response]]
             [compojure.route :as route]
             [ring.middleware.cors :refer [wrap-cors]]
-            [modern-cljs.views :as views]
+            [modern-cljs.views.views :as views]
             [modern-cljs.views.layout :as layout]
             [modern-cljs.service.browse-news-service :as browse-news-service]
             [modern-cljs.service.add-news-service :as add-news-service]))
@@ -29,7 +29,6 @@
      (POST "/add-comment" [] browse-news-service/add-comment)
      (POST "/delete-comment" [] browse-news-service/remove-comment)))
 
-
 (defn wrap-log-request [handler]
   (fn [req] ; return handler function
     (println req) ; perform logging
@@ -39,7 +38,7 @@
 ;; adding a bunch of standard ring middleware to app-route:
 (def app-handler
   (-> app-routes
-      ;wrap-log-request
+      wrap-log-request
       ))
 
 (def api-handler
