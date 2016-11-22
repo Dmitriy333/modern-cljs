@@ -1,6 +1,6 @@
 (ns modern-cljs.service.sessionservice)
 
-(def session-atom (atom {}))
+(def session-atom (atom {:login nil}))
 
 (defn getSessionMemory []
   session-atom)

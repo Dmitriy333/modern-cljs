@@ -25,6 +25,8 @@
            (GET "/news/:id" [id] (layout/application "Read News" (views/browse-news-view id)))
            (GET "/add-news" [] (layout/application "Add News Page" (views/add-news-view)))
            (GET "/registration" [] (layout/application "Registration Page" (views/registration-view)))
+           (GET "/login" [] (layout/application "Login Page" (views/registration-view)))
+
 
            (route/resources "/") ; to serve static pages saved in resources/public directory
            (route/not-found "Page not found")) ; if page is not found
