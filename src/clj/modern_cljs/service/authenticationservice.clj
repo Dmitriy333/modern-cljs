@@ -6,21 +6,21 @@
             [modern-cljs.views.layout :as layout]
             ))
 
-(defn add-user-attribute-to-response [response request authdetails]
+(defn add-user-attribute-to-response [authdetails response request]
   (assoc response :session (-> (:session request)
                                (assoc :role (:role authdetails))
                                (assoc :login (:login authdetails))
-                               (assoc :email (:email authdetails))
-                               )))
+                               (assoc :email (:email authdetails)))))
 
 (defn login [request]
   (let [email (get-in request [:params :email])
         password (get-in request [:params :password])]
-    (let [user (userrepo/find-by-email-and-hash userrepo/userRepositoryComponent email (d/md5 password))]
-      (if (empty? user)
+    (let [userRs (userrepo/find-by-email-and-hash userrepo/userRepositoryComponent email (d/md5 password))]
+      (if (empty? userRs)
         (layout/application "Incorrect credentials" (views/login-view))
-        (add-user-attribute-to-response (response/redirect "/") request {:login (:login user) :role (:role user) :email (:email user)})))))
+        (do (-> (first userRs)
+                (add-user-attribute-to-response (response/redirect "/") request)))))))
 
 (defn logout [request]
-  (add-user-attribute-to-response (response/redirect "/") request {}))
+  (add-user-attribute-to-response {} (response/redirect "/") request ))
 
