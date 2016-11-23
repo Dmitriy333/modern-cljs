@@ -5,7 +5,7 @@
         :require
         [modern-cljs.repository.newsrepository :as newsrepo]
         [ring.util.response :as response]
-        [modern-cljs.service.browse-news-service]
+        [modern-cljs.service.newsservice]
         [modern-cljs.model.model :as model]
         [modern-cljs.repository.crudrepository :as crudRepository])
   (:import (java.text SimpleDateFormat)))
@@ -40,15 +40,16 @@
           [:hr]]))
      ]))
 
-(defn browse-news-view [id]
-  (init-page-state id)
-  (let [news (:news (getBrowseNewsPageState))]
-    [:div {:class "container news-container"}
-     [:div (:title news)]
-     [:div (.format (SimpleDateFormat. "yyyy-MM-dd") (:creation_date news))]
-     [:div (:full_text news)]
-     (comments-component (:comments (getBrowseNewsPageState)))
-     ]))
+(defn browse-news-view [request]
+  ;(init-page-state id)
+  (let [newsView (getNewsView request)]
+    (let [news (:news newsView)]
+      [:div {:class "container news-container"}
+       [:div (:title news)]
+       [:div (.format (SimpleDateFormat. "yyyy-MM-dd") (:creation_date news))]
+       [:div (:full_text news)]
+       (comments-component (:comments newsView))
+       ])))
 
 (defn add-news-view []
   (html5

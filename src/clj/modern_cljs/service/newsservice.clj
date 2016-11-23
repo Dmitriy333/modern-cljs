@@ -1,4 +1,4 @@
-(ns modern-cljs.service.browse-news-service
+(ns modern-cljs.service.newsservice
   (:use
     :require
     [modern-cljs.repository.newsrepository]
@@ -8,6 +8,8 @@
   (:require [modern-cljs.model.model :as model]
             [modern-cljs.repository.crudrepository :as crudRepository]
             [modern-cljs.repository.newsrepository :as newsRepository]
+            [modern-cljs.repository.auditrepository :as auditRepository]
+            [modern-cljs.service.userservice :as userservice]
             [modern-cljs.repository.logrepository :as logRepository]
             [modern-cljs.service.logservice :as logService]
             [clojure.data.json :as json])
@@ -21,6 +23,14 @@
     (str (Timestamp. (.getTime value)))
     value))
 
+(defn getNewsView [request]
+  (if (userservice/isUserLoggedIn? request)
+    (let [audit (model/->Audit nil (get-in request [:params :id]) (userservice/getAuthenticatedUserEmail request) (new Date))]
+      (crudRepository/add auditRepository/auditRepositoryComponent audit)))
+  {
+   :news     (crudRepository/find-by-id newsRepository/newsRepositoryComponent (get-in request [:params :id]))
+   :comments (find-by-news-id commentRepositoryComponent (get-in request [:params :id]))
+   })
 
 (defn init-page-state [newsId]
   (swap! browseNewsPageState assoc
