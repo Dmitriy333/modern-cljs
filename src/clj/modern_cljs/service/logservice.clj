@@ -16,24 +16,24 @@
 
 (def log-agent (agent logRepositoryComponent))
 
-(defn my-value-writer [key value]
-  (if (= key :creation_date)
-    (str (Timestamp. (.getTime value)))
-    value))
-
-(defn write-out [message logger]
-  (let [item-message message]
-    (println item-message)
-    (println logger)
-    ;(crudRepository/add logger item-message)
-    )
-  )
-
-(defn log-message [logger message]
-  ;(println message)
-  (send logger write-out message))
-
-(defn log-event [event type]
-  (let [event-to-log (model/->Log nil (json/write-str event :value-fn my-value-writer) type (new Date))]
-    (log-message log-agent event-to-log)))
+;(defn my-value-writer [key value]
+;  (if (= key :creation_date)
+;    (str (Timestamp. (.getTime value)))
+;    value))
+;
+;(defn write-out [message logger]
+;  (let [item-message message]
+;    (println item-message)
+;    (println logger)
+;    ;(crudRepository/add logger item-message)
+;    )
+;  )
+;
+;(defn log-message [logger message]
+;  ;(println message)
+;  (send logger write-out message))
+;
+;(defn log-event [event type]
+;  (let [event-to-log (model/->Log nil (json/write-str event :value-fn my-value-writer) type (new Date))]
+;    (log-message log-agent event-to-log)))
 
