@@ -14,7 +14,7 @@
 
 (defroutes app-routes
      (GET "/" request (layout/application "Home" request (views/news-list-view)))
-     (GET "/news/:id" request (layout/application "Read News" request (views/browse-news-view (get-in request [:params :id]))))
+     (GET "/news/:id" request (layout/application "Read News" request (views/browse-news-view request)))
      (GET "/add-news" request (layout/application "Add News Page" request (views/add-news-view)))
      (GET "/registration" request (layout/application "Registration Page" request (views/registration-view)))
      (GET "/login" request (layout/application "Login Page" request (views/login-view)))
