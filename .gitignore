@@ -13,3 +13,4 @@ pom.xml.asc
 /out
 /repl
 modern-cljs.iml
+figwheel_server.log
