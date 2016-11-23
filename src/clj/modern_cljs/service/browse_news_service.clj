@@ -36,7 +36,8 @@
 (defn remove-comment [request]
   (let [commentId (:commentId (:params request))]
     (let [comment (crudRepository/find-by-id commentRepositoryComponent commentId)]
-      (logService/log-event comment "delete-comment"))
+      ;(logService/log-event comment "delete-comment")
+      )
     (crudRepository/delete commentRepositoryComponent commentId))
   (response/redirect (str "/news/" (:newsId (:params request)))))
 

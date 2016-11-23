@@ -30,14 +30,11 @@
            [:div {:id "navbar" :class "navbar-collapse collapse"}
             [:ul {:class "nav navbar-nav"}
 
-             (when (not-empty (:login @sessionservice/session-atom))
-               (do (navbar-add-news-template)
-                   (navbar-login-template)))
-
+             (navbar-login-template)
 
                    ;(navbar-add-news-template)
                    ;(navbar-registration-template)
-                   ;(navbar-logout-template)
+             ;(navbar-logout-template)
 
              ]
             ]]]))

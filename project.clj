@@ -15,6 +15,7 @@
                  [hiccup "1.0.5"]
                  [javax.servlet/servlet-api "2.5"]          ;;repl doesn't work without dependencies
                  [ring/ring-json "0.4.0"]                   ;;to parse json https://github.com/ring-clojure/ring-json
+                 [ring/ring-defaults "0.2.1"]
                  [jumblerg/ring.middleware.cors "1.0.1"]
                  [org.clojure/data.json "0.2.6"]            ;for json
                  [ring-basic-authentication "1.0.5"]

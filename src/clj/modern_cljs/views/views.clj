@@ -38,33 +38,42 @@
           [:div {class "news-short-text"} (:short_text news)]
           [:div (link-to {:class "btn btn-success"} (str "/news/" (:id news)) "Read")]
           [:hr]]))
-    ]))
+     ]))
 
 (defn browse-news-view [id]
   (init-page-state id)
   (let [news (:news (getBrowseNewsPageState))]
-     [:div {:class "container news-container"}
-      [:div (:title news)]
-      [:div (.format (SimpleDateFormat. "yyyy-MM-dd") (:creation_date news))]
-      [:div (:full_text news)]
-      (comments-component (:comments (getBrowseNewsPageState)))
-      ]))
+    [:div {:class "container news-container"}
+     [:div (:title news)]
+     [:div (.format (SimpleDateFormat. "yyyy-MM-dd") (:creation_date news))]
+     [:div (:full_text news)]
+     (comments-component (:comments (getBrowseNewsPageState)))
+     ]))
 
 (defn add-news-view []
-   (html5
-     [:form {:enctype "application/json" :method "post" :action "/api/add-news" :class "container news-container"}
-      [:span "Title:"] [:input {:type "text" :name "title" :class "news-title" :required "true"}]
-      [:br]
-      [:span "Short text:"] [:textarea {:name "shortText" :class "news-short-text" :required "true"}]
-      [:br]
-      [:span "Text: "] [:textarea {:name "fullText" :class "text" :required "true"}]
-      [:br]
-      [:input {:type "submit" :value "Add news" :class "btn btn-primary"}]
-      ]))
+  (html5
+    [:form {:method "post" :action "/api/add-news" :class "container news-container"}
+     [:span "Title:"] [:input {:type "text" :name "title" :class "news-title" :required "true"}]
+     [:br]
+     [:span "Short text:"] [:textarea {:name "shortText" :class "news-short-text" :required "true"}]
+     [:br]
+     [:span "Text: "] [:textarea {:name "fullText" :class "text" :required "true"}]
+     [:br]
+     [:input {:type "submit" :value "Add news" :class "btn btn-primary"}]
+     ]))
+
+(defn login-view []
+  (html5
+    [:form {:method "post" :action "/login" :class "container news-container"}
+     [:span "Email"] [:input {:type "email" :id "email" :name "email" :required "true"}]
+     [:br]
+     [:span "Password"] [:input {:type "password" :id "password" :name "password" :required "true"}]
+     [:br]
+     [:input {:type "submit" :value "Log In" :class "btn btn-success"}]]))
 
 (defn registration-view []
   (html5
-    [:form {:enctype "application/json" :method "post" :action "/api/register" :class "container news-container" :onsubmit "return submitRegistrationForm()"}
+    [:form {:method "post" :action "/api/register" :class "container news-container" :onsubmit "return submitRegistrationForm()"}
      [:span "Email"] [:input {:type "email" :id "email" :name "email" :required "true"}]
      [:br]
      [:span "Name"] [:input {:type "text" :id "name" :name "login" :required "true"}]
