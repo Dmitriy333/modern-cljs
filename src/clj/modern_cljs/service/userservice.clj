@@ -7,3 +7,15 @@
 
 (defn register [user]
   (crudrepository/add userrepository/userRepositoryComponent user))
+
+(defn getAuthenticatedUserRole [request]
+  (get-in request [:session :role]))
+
+(defn getAuthenticatedUserLogin [request]
+  (get-in request [:session :login]))
+
+(defn getAuthenticatedUserEmail [request]
+  (get-in request [:session :email]))
+
+(defn isUserLoggedIn? [request]
+  (not-empty (getAuthenticatedUserLogin request)))

@@ -13,11 +13,11 @@
             [modern-cljs.service.authenticationservice :as authservice]))
 
 (defroutes app-routes
-     (GET "/" [] (layout/application "Home" (views/news-list-view)))
-     (GET "/news/:id" [id] (layout/application "Read News" (views/browse-news-view id)))
-     (GET "/add-news" [] (layout/application "Add News Page" (views/add-news-view)))
-     (GET "/registration" [] (layout/application "Registration Page" (views/registration-view)))
-     (GET "/login" [] (layout/application "Login Page" (views/login-view)))
+     (GET "/" request (layout/application "Home" request (views/news-list-view)))
+     (GET "/news/:id" request (layout/application "Read News" request (views/browse-news-view (get-in request [:params :id]))))
+     (GET "/add-news" request (layout/application "Add News Page" request (views/add-news-view)))
+     (GET "/registration" request (layout/application "Registration Page" request (views/registration-view)))
+     (GET "/login" request (layout/application "Login Page" request (views/login-view)))
      (GET "/logout" request (authservice/logout request))
 
 
