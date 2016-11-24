@@ -43,19 +43,11 @@
               (if (userservice/isUserLoggedIn? request)
                 (authenticated-user-nav-bar)
                 (non-authenticated-user-nav-bar))
-
-
-             ;(navbar-login-template)
-
-
-                   ;(navbar-registration-template)
-             ;(navbar-logout-template)
-
              ]
             ]]]))
 
 (defn application [title request & content]
-  (println request)
+  ;(println request) ;log incoming request
   (html5
          [:head
           [:title title]
