@@ -23,11 +23,32 @@
     (str (Timestamp. (.getTime value)))
     value))
 
+(def watchedNewsAtom (atom '()))                            ;create atom with empty list
+
+(defn audit-function [audits]
+  (println "batch inserting started ...")
+  (println "adding " audits)
+  (auditRepository/insert-multiple-audits auditRepository/auditRepositoryComponent audits)
+  (println "batch inserting ended ..."))
+
+(add-watch watchedNewsAtom :watcher
+   (fn [key atom old-state new-state]
+      (if (= 2 (count new-state))
+        (do
+          (let [agentSender (agent new-state)]
+            (send agentSender audit-function))
+          ;;invoke agent action here and pass a list of news
+          (reset! watchedNewsAtom '())))))
+
+(defn auditWatchedNewsInMemory [audit]
+  (let [watchedNewsAuditList @watchedNewsAtom]
+    (reset! watchedNewsAtom (conj watchedNewsAuditList audit))))
+
 (defn getNewsView [request]
   (if (userservice/isUserLoggedIn? request)
     (let [audit (model/->Audit nil (get-in request [:params :id]) (userservice/getAuthenticatedUserEmail request) (new Date))]
-      (crudRepository/add auditRepository/auditRepositoryComponent audit)))
-  {
+    (auditWatchedNewsInMemory audit)))
+   {
    :news     (crudRepository/find-by-id newsRepository/newsRepositoryComponent (get-in request [:params :id]))
    :comments (find-by-news-id commentRepositoryComponent (get-in request [:params :id]))
    })
