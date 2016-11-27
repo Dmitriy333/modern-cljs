@@ -4,7 +4,9 @@
     [modern-cljs.repository.newsrepository]
     [modern-cljs.repository.commentsrepository]
     [modern-cljs.repository.logrepository]
-    [ring.util.response :as response])
+    [ring.util.response :as response]
+    [modern-cljs.dsl.actiondsl]
+    )
   (:require [modern-cljs.model.model :as model]
             [modern-cljs.repository.crudrepository :as crudRepository]
             [modern-cljs.repository.newsrepository :as newsRepository]
@@ -12,7 +14,8 @@
             [modern-cljs.service.userservice :as userservice]
             [modern-cljs.repository.logrepository :as logRepository]
             [modern-cljs.service.logservice :as logService]
-            [clojure.data.json :as json])
+            [clojure.data.json :as json]
+            [modern-cljs.dsl.actiondsl :as dsl])
   (:import (java.util Date)
            (java.sql Timestamp)))
 
@@ -32,8 +35,6 @@
       (if (= 2 (count new-state))
         (do
           (send auditorAgent audit-function new-state)
-          ;(let [agentSender (agent new-state)]
-          ;  (send auditorAgent audit-function new-state))
           ;;invoke agent action here and pass a list of news
           (reset! watchedNewsAtom '())))))
 
@@ -45,10 +46,24 @@
   (if (userservice/isUserLoggedIn? request)
     (let [audit (model/->Audit nil (get-in request [:params :id]) (userservice/getAuthenticatedUserEmail request) (new Date))]
     (auditWatchedNewsInMemory audit)))
-   {
+
+
+  (script (println "a"))
+  {
    :news     (crudRepository/find-by-id newsRepository/newsRepositoryComponent (get-in request [:params :id]))
    :comments (find-by-news-id commentRepositoryComponent (get-in request [:params :id]))
-   })
+   }
+
+
+
+  ;(with-implementation (script (println "a")))
+  ;(binding [dsl/*current-implementation* ::common]
+  ;  (dsl/emit 2))
+  ;(dsl/with-implementation
+  ;                     (dsl/script
+  ;                       (println "a")))
+
+  )
 
 (defn add-comment [request]
   (let [commentItem (:params request)]
