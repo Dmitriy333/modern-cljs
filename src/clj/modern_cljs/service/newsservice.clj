@@ -18,14 +18,10 @@
 
 (def browseNewsPageState (atom {:news nil :comments nil}))
 
-(defn my-value-writer [key value]
-  (if (= key :creation_date)
-    (str (Timestamp. (.getTime value)))
-    value))
-
 (def watchedNewsAtom (atom '()))                            ;create atom with empty list
+(def auditorAgent (agent nil))
 
-(defn audit-function [audits]
+(defn audit-function [agentstate audits]
   (println "batch inserting started ...")
   (println "adding " audits)
   (auditRepository/insert-multiple-audits auditRepository/auditRepositoryComponent audits)
@@ -35,8 +31,9 @@
    (fn [key atom old-state new-state]
       (if (= 2 (count new-state))
         (do
-          (let [agentSender (agent new-state)]
-            (send agentSender audit-function))
+          (send auditorAgent audit-function new-state)
+          ;(let [agentSender (agent new-state)]
+          ;  (send auditorAgent audit-function new-state))
           ;;invoke agent action here and pass a list of news
           (reset! watchedNewsAtom '())))))
 
@@ -52,11 +49,6 @@
    :news     (crudRepository/find-by-id newsRepository/newsRepositoryComponent (get-in request [:params :id]))
    :comments (find-by-news-id commentRepositoryComponent (get-in request [:params :id]))
    })
-
-(defn init-page-state [newsId]
-  (swap! browseNewsPageState assoc
-         :news (crudRepository/find-by-id newsRepository/newsRepositoryComponent newsId)
-         :comments (find-by-news-id commentRepositoryComponent newsId)))
 
 (defn add-comment [request]
   (let [commentItem (:params request)]

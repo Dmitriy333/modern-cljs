@@ -27,6 +27,7 @@
      (route/not-found "Page not found")               ; if page is not found
      )
 
+
 (defn wrap-log-request [handler]
   (fn [req]                                                 ; return handler function
     (println req)                                           ; perform logging
