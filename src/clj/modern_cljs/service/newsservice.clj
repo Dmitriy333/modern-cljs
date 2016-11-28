@@ -48,7 +48,8 @@
     (auditWatchedNewsInMemory audit)))
 
 
-  (script (println "a"))
+  ;(script (println "a"))
+  (execute "on login send-email to dmitriybrashevets@mail.ru")
   {
    :news     (crudRepository/find-by-id newsRepository/newsRepositoryComponent (get-in request [:params :id]))
    :comments (find-by-news-id commentRepositoryComponent (get-in request [:params :id]))
