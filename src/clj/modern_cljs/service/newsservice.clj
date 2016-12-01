@@ -5,7 +5,7 @@
     [modern-cljs.repository.commentsrepository]
     [modern-cljs.repository.logrepository]
     [ring.util.response :as response]
-    [modern-cljs.dsl.actiondsl]
+    [modern-cljs.dsl.dsltask]
     )
   (:require [modern-cljs.model.model :as model]
             [modern-cljs.repository.crudrepository :as crudRepository]
@@ -15,7 +15,7 @@
             [modern-cljs.repository.logrepository :as logRepository]
             [modern-cljs.service.logservice :as logService]
             [clojure.data.json :as json]
-            [modern-cljs.dsl.actiondsl :as dsl])
+            [modern-cljs.dsl.dsltask :as dsl])
   (:import (java.util Date)
            (java.sql Timestamp)))
 
@@ -49,7 +49,10 @@
 
 
   ;(script (println "a"))
-  (execute "on login send-email to dmitriybrashevets@mail.ru")
+  ; (execute "on login send-email to dmitriybrashevets@mail.ru")
+  ;(execute-custom-dsl "on login send-email to dmitriybrashevets@mail.ru")
+
+  ;(execute-code "on login send-email dmitriybrashavets@gmail.com")
   {
    :news     (crudRepository/find-by-id newsRepository/newsRepositoryComponent (get-in request [:params :id]))
    :comments (find-by-news-id commentRepositoryComponent (get-in request [:params :id]))

@@ -22,6 +22,10 @@
   (html5
     [:li (link-to "/add-news" "Add News")]))
 
+(defn navbar-dsl-template []
+  (html5
+    [:li (link-to "/dsl" "Dsl Page")]))
+
 (defn authenticated-user-nav-bar []
   (html5
     (navbar-add-news-template)
@@ -30,7 +34,8 @@
 (defn non-authenticated-user-nav-bar []
   (html5
     (navbar-login-template)
-    (navbar-registration-template)))
+    (navbar-registration-template)
+    (navbar-dsl-template)))
 
 
 (defn nav-bar [request]

@@ -4,6 +4,8 @@
             [modern-cljs.repository.userrepository :as userrepo]
             [modern-cljs.views.views :as views]
             [modern-cljs.views.layout :as layout]
+            [modern-cljs.dsl.dsltaskexecutor :as de]
+            [modern-cljs.repository.dslrepository :as dr]
             ))
 
 (defn add-user-attribute-to-response [authdetails response request]
@@ -18,8 +20,14 @@
     (let [userRs (userrepo/find-by-email-and-hash userrepo/userRepositoryComponent email (d/md5 password))]
       (if (empty? userRs)
         (layout/application "Incorrect credentials" (views/login-view))
-        (do (-> (first userRs)
-                (add-user-attribute-to-response (response/redirect "/") request)))))))
+        (do
+          (let [rule (dr/find-rule "user" "login")]
+            (de/execute-task (:task rule ) "user" "dmitriybrashevetsgmailcom" "user has been logged in"))
+
+          (-> (first userRs)
+                (add-user-attribute-to-response (response/redirect "/") request))
+
+          )))))
 
 (defn logout [request]
   (add-user-attribute-to-response {} (response/redirect "/") request ))

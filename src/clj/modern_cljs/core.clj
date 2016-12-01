@@ -10,7 +10,8 @@
             [modern-cljs.views.layout :as layout]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.session :as ss]
-            [modern-cljs.service.authenticationservice :as authservice]))
+            [modern-cljs.service.authenticationservice :as authservice]
+            [modern-cljs.service.dslservice :as dsls]))
 
 (defroutes app-routes
      (GET "/" request (layout/application "Home" request (views/news-list-view)))
@@ -19,9 +20,11 @@
      (GET "/registration" request (layout/application "Registration Page" request (views/registration-view)))
      (GET "/login" request (layout/application "Login Page" request (views/login-view)))
      (GET "/logout" request (authservice/logout request))
+     (GET "/dsl" request (layout/application "Dsl Page" request (views/dsl-view)))
 
 
      (POST "/login" request (authservice/login request))
+     (POST "/add-dsl-rule" request (dsls/add-dsl request))
 
      (route/resources "/")                            ; to serve static pages saved in resources/public directory
      (route/not-found "Page not found")               ; if page is not found
