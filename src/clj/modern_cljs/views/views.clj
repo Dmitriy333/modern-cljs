@@ -85,3 +85,11 @@
      [:br]
      [:input {:type "submit" :value "Register" :class "btn btn-success"}]]))
 
+(defn dsl-view []
+  (html5
+    [:form {:method "post" :action "/add-dsl-rule" :class "container news-container"}
+     [:span "Title:"] [:input {:type "text" :name "rule" :class "news-title" :required "true"}]
+     [:br]
+     [:input {:type "submit" :value "Submit" :class "btn btn-primary"}]
+     ]))
+

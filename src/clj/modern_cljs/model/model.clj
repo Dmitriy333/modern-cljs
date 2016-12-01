@@ -9,3 +9,5 @@
 (defrecord Log [id, value, type, creation_date])
 
 (defrecord Audit [id, news_id, user_id, creation_date])
+
+(defrecord Rule [id, entity, entity_event, task])
