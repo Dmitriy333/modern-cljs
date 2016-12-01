@@ -7,13 +7,10 @@
     (do (str "\""param"\""))
     param) )
 
-(defn execute-task [dsl-task entity email details]
+(defn execute-task [dsl-task & params]
   (binding [*ns* (:ns (meta #'t/send-string-details-by-email-task))]
-    (eval (read-string (str "("
-                            dsl-task " '"
-                            (extract-param entity) " '"
-                            (extract-param email) " '"
-                            (extract-param details)
-                            ")"  )))
-    ))
+    (let [code (for [param params]
+                 (str " '" (extract-param param)))]
+      (let [resulted-code (str "(" dsl-task (clojure.string/join code) ")" )]
+        (eval (load-string resulted-code))))))
 
